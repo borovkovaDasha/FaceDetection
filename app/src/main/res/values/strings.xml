@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FaceDetection</string>
+    <string name="introduction_text">   Take your photo to log in!   </string>
+    <string name="title_activity_log_on">LogOnActivity</string>
+</resources>

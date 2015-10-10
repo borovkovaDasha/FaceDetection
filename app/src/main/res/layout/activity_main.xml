@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical|center_horizontal"
+    android:weightSum="1">
+
+    <SurfaceView
+        android:layout_width="fill_parent"
+        android:layout_height="421dp"
+        android:id="@+id/sv"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.95" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/takepic_btn"
+            android:onClick="onClickPicture"
+            android:layout_gravity="right"
+            android:text="Pic" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Confirm"
+            android:id="@+id/confirm_btn"
+            android:visibility="gone"
+            android:onClick="onConfirmClicked"/>
+    </LinearLayout>
+
+</LinearLayout>
