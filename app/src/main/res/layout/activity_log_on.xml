@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <TextView
+        android:layout_width="384dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Succesfuly log on!"
+        android:id="@+id/textView"
+        android:background="@color/bright_foreground_inverse_material_light"
+        android:gravity="center_horizontal"
+        android:textStyle="bold|italic" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/enterText"
+        android:layout_weight="0.93"
+        android:editable="true"
+        android:enabled="true"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/submit_btn"
+            android:onClick="onSubmitPressed"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log off"
+            android:id="@+id/logoff_btn"
+            android:onClick="onLogoffPressed"/>
+    </LinearLayout>
+
+</LinearLayout>
