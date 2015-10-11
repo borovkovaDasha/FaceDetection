@@ -17,7 +17,6 @@ import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Display;
-import android.view.Menu;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -25,32 +24,33 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class PhotoActivity extends Activity {
 
     SurfaceView sv;
     SurfaceHolder holder;
     HolderCallback holderCallback;
     Camera camera;
-    File photoFile;
+    File photo1, photo2, photo3, photoToCheck;
+    TextView title_field;
     boolean takephoto=true;
     Button confirmBtn;
     Button takepicBtn;
     final int CAMERA_ID = 0;
     final boolean FULL_SCREEN = true;
-    private final int IDD_DIALOG = 0;
+    private final int IDD_DIALOG_FAIL = 0;
+    private final int IDD_DIALOG_SIGNUP_SUCCESS=1;
     AlertDialog.Builder ad;
-
+    String regName;
+    boolean isRegistering = false;
+    int countPics = 0;
+    File[] arr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        File pictures = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        photoFile = new File(pictures, "myphoto.jpg");
 
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+       requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -58,16 +58,42 @@ public class MainActivity extends Activity {
         sv = (SurfaceView) findViewById(R.id.sv);
         confirmBtn = (Button) findViewById(R.id.confirm_btn);
         takepicBtn = (Button) findViewById(R.id.takepic_btn);
+        title_field = (TextView)findViewById(R.id.title_view);
 
         holder = sv.getHolder();
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         holderCallback = new HolderCallback();
         holder.addCallback(holderCallback);
+
+        Intent intent = getIntent();
+        if (intent != null ) {
+            regName = intent.getStringExtra("name");
+            if (regName != null) {
+                isRegistering = true;
+                /*photo1 = new File(PhotoActivity.this.getFilesDir(), regName + "photo1.jpg");
+                photo2 = new File(PhotoActivity.this.getFilesDir(), regName + "photo2.jpg");
+                photo3 = new File(PhotoActivity.this.getFilesDir(), regName + "photo3.jpg"); */
+                arr = new File[]{new File(PhotoActivity.this.getExternalFilesDir(null), regName + "photo1.jpg"), new File(PhotoActivity.this.getExternalFilesDir(null), regName + "photo2.jpg"),
+                        new File(PhotoActivity.this.getExternalFilesDir(null), regName + "photo3.jpg")};
+                title_field.setText("Take 3 photos, " + regName);
+            } else {
+                photoToCheck = new File(PhotoActivity.this.getExternalFilesDir(null), "phototocheck.jpg");
+            }
+        }
+
+
     }
+
+
+
+
     protected Dialog onCreateDialog(int id) {
 
 
+        switch (id) {
+
+            case IDD_DIALOG_FAIL:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Your face is not recognized. Would you like to try again or sign up?")
                         .setTitle("Login failed!")
@@ -85,20 +111,59 @@ public class MainActivity extends Activity {
                                     public void onClick(DialogInterface dialog,
                                                         int id) {
                                         dialog.cancel();
-                                        Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                                        Intent intent = new Intent(PhotoActivity.this, SignUpActivity.class);
+                                        startActivity(intent);
+
+                                    }
+                                });
+                return builder.create();
+
+
+            case IDD_DIALOG_SIGNUP_SUCCESS:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                builder2.setMessage("Photos are taken succesfully! Would you like to log in?")
+                        .setTitle("Sign up")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.cancel();
+                                        isRegistering = false;
+                                        countPics=0;
+                                        title_field.setText("Take your photo to log in!");
+                                        ResettingCamera();
+
+                                    }
+                                })
+
+                        .setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.cancel();
+                                        Intent intent = new Intent(PhotoActivity.this, StartWindowActivity.class);
                                         startActivity(intent);
 
                                     }
                                 });
 
-        return builder.create();
+
+                return builder2.create();
+
+            default:
+                return null;
         }
+
+
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         camera = Camera.open(CAMERA_ID);
-        setPreviewSize(FULL_SCREEN);
+        //setPreviewSize(FULL_SCREEN);
     }
 
     @Override
@@ -225,35 +290,66 @@ public class MainActivity extends Activity {
     }
 
     public void onClickPicture(View view) {
-        if (takephoto == true){
-        camera.takePicture(null, null, new Camera.PictureCallback() {
-            @Override
 
-            public void onPictureTaken(byte[] data, Camera camera) {
-                try {
-                    FileOutputStream fos = new FileOutputStream(photoFile);
-                    fos.write(data);
-                    fos.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                confirmBtn.setVisibility(View.VISIBLE);
-                takepicBtn.setText("Retake");
-                takephoto=false;
+        if (isRegistering == false) {
+            if (takephoto == true) {
+                camera.takePicture(null, null, new Camera.PictureCallback() {
+                            @Override
+
+                            public void onPictureTaken(byte[] data, Camera camera) {
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(photoToCheck);
+                                    fos.write(data);
+                                    fos.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                confirmBtn.setVisibility(View.VISIBLE);
+                                takepicBtn.setText("Retake");
+                                takephoto = false;
 
 
+                            }
+                        }
+                );
+            } else {
+
+                ResettingCamera();
             }
         }
-        ); }
+
         else {
 
-            camera.startPreview();
-            takepicBtn.setText("Pic");
-            confirmBtn.setVisibility(View.GONE);
-            takephoto=true;
+            if (takephoto == true) {
+                camera.takePicture(null, null, new Camera.PictureCallback() {
+                            @Override
+
+                            public void onPictureTaken(byte[] data, Camera camera) {
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(arr[countPics]);
+                                    fos.write(data);
+                                    fos.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                confirmBtn.setVisibility(View.VISIBLE);
+                                takepicBtn.setText("Retake");
+                                takephoto = false;
+
+
+                            }
+                        }
+                );
+            } else {
+
+                ResettingCamera();
+            }
         }
 
-    }
+
+
+        }
+
 
     public boolean SendtoServer(){
         /* some magic happens here */
@@ -262,21 +358,46 @@ public class MainActivity extends Activity {
 
     }
     public void onConfirmClicked(View view) {
-        boolean ServerResponse=false;
+        boolean ServerResponse = false;
         //Getting server response or checking it right here dunno
-        if (ServerResponse == true){
-            Intent intent = new Intent(this, LogOnActivity.class);
-            startActivity(intent);
+        if (isRegistering == false) {
+            if (ServerResponse == true) {
+                Intent intent = new Intent(this, LogOnActivity.class);
+                startActivity(intent);
+            } else {
+
+                showDialog(IDD_DIALOG_FAIL);
+                ResettingCamera();
+            }
+
         }
+
         else {
+            countPics++;
+            if (countPics == 3) {
 
-        showDialog(IDD_DIALOG);
-            camera.startPreview();
-            takepicBtn.setText("Pic");
-            confirmBtn.setVisibility(View.GONE);
-            takephoto=true;
+                //send to server
+                //success!
+                showDialog(IDD_DIALOG_SIGNUP_SUCCESS);
+
+            }
+            else {
+                ResettingCamera();
+
+            }
+
+
+
         }
 
+    }
+
+    public void ResettingCamera() {
+
+        camera.startPreview();
+        takepicBtn.setText("Pic");
+        confirmBtn.setVisibility(View.GONE);
+        takephoto = true;
     }
 
 }
