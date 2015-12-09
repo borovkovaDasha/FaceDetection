@@ -14,6 +14,7 @@ import android.graphics.RectF;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
+import android.media.FaceDetector;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Display;
@@ -37,7 +38,7 @@ public class PhotoActivity extends Activity {
     boolean takephoto=true;
     Button confirmBtn;
     Button takepicBtn;
-    final int CAMERA_ID = 0;
+    final int CAMERA_ID = 1;
     final boolean FULL_SCREEN = true;
     private final int IDD_DIALOG_FAIL = 0;
     private final int IDD_DIALOG_SIGNUP_SUCCESS=1;
@@ -46,6 +47,17 @@ public class PhotoActivity extends Activity {
     boolean isRegistering = false;
     int countPics = 0;
     File[] arr;
+    private Camera.Face[] mFaces;
+
+    private Camera.FaceDetectionListener faceDetectionListener = new Camera.FaceDetectionListener() {
+        @Override
+        public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+
+                takepicBtn.setEnabled(true);
+                title_field.setText("face detected!");
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +71,7 @@ public class PhotoActivity extends Activity {
         confirmBtn = (Button) findViewById(R.id.confirm_btn);
         takepicBtn = (Button) findViewById(R.id.takepic_btn);
         title_field = (TextView)findViewById(R.id.title_view);
+        takepicBtn.setEnabled(false);
 
         holder = sv.getHolder();
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -179,6 +192,8 @@ public class PhotoActivity extends Activity {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             try {
+                camera.setFaceDetectionListener(faceDetectionListener);
+                camera.startFaceDetection();
                 camera.setPreviewDisplay(holder);
                 camera.startPreview();
             } catch (IOException e) {
