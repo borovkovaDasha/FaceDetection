@@ -31,14 +31,8 @@ public class FaceOverlayView extends View {
         mPaint.setDither(true);
         mPaint.setColor(Color.GREEN);
         mPaint.setAlpha(128);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setStyle(Paint.Style.STROKE);
 
-        mTextPaint = new Paint();
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setDither(true);
-        mTextPaint.setTextSize(20);
-        mTextPaint.setColor(Color.GREEN);
-        mTextPaint.setStyle(Paint.Style.FILL);
     }
 
     public void setFaces(Camera.Face[] faces) {
@@ -69,9 +63,12 @@ public class FaceOverlayView extends View {
                 rectF.set(face.rect);
                 matrix.mapRect(rectF);
                 canvas.drawRect(rectF, mPaint);
-                canvas.drawText("Score " + face.score, rectF.right, rectF.top, mTextPaint);
             }
             canvas.restore();
+        }
+        else {
+            super.destroyDrawingCache();
+
         }
     }
 
@@ -83,7 +80,7 @@ public class FaceOverlayView extends View {
         matrix.postRotate(displayOrientation);
         // Camera driver coordinates range from (-1000, -1000) to (1000, 1000).
         // UI coordinates range from (0, 0) to (width, height).
-        matrix.postScale(viewWidth / 2000f, viewHeight / 2000f);
-        matrix.postTranslate(viewWidth / 2f, viewHeight / 2f);
+        matrix.postScale(viewWidth / 2000f, viewHeight/ 2000f);
+        matrix.postTranslate(viewWidth/ 2f, viewHeight/ 2f);
     }
 }
