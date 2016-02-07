@@ -1,4 +1,5 @@
 package pi.hse.facedetection;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,8 @@ public class FaceOverlayView extends View {
     private int mDisplayOrientation;
     private int mOrientation;
     private Camera.Face[] mFaces;
+    private int surfaceWidgh;
+    private int surfaceHeight;
 
     public FaceOverlayView(Context context) {
         super(context);
@@ -65,8 +68,7 @@ public class FaceOverlayView extends View {
                 canvas.drawRect(rectF, mPaint);
             }
             canvas.restore();
-        }
-        else {
+        } else {
             super.destroyDrawingCache();
 
         }
@@ -80,7 +82,14 @@ public class FaceOverlayView extends View {
         matrix.postRotate(displayOrientation);
         // Camera driver coordinates range from (-1000, -1000) to (1000, 1000).
         // UI coordinates range from (0, 0) to (width, height).
-        matrix.postScale(viewWidth / 2000f, viewHeight/ 2000f);
-        matrix.postTranslate(viewWidth/ 2f, viewHeight/ 2f);
+        matrix.postScale(viewWidth / 2000f, viewHeight / 2000f);
+        matrix.postTranslate(viewWidth / 2f, viewHeight / 2f);
+    }
+
+    public void setSurfaceWidgh(int sv){
+        this.surfaceWidgh=sv;
+    }
+    public void setSurfaceHeight(int sv){
+        this.surfaceHeight=sv;
     }
 }
