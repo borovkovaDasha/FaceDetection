@@ -1,4 +1,5 @@
 package pi.hse.facedetection;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,8 @@ public class FaceOverlayView extends View {
     private int mDisplayOrientation;
     private int mOrientation;
     private Camera.Face[] mFaces;
+    private int surfaceWidgh;
+    private int surfaceHeight;
 
     public FaceOverlayView(Context context) {
         super(context);
@@ -31,14 +34,8 @@ public class FaceOverlayView extends View {
         mPaint.setDither(true);
         mPaint.setColor(Color.GREEN);
         mPaint.setAlpha(128);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setStyle(Paint.Style.STROKE);
 
-        mTextPaint = new Paint();
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setDither(true);
-        mTextPaint.setTextSize(20);
-        mTextPaint.setColor(Color.GREEN);
-        mTextPaint.setStyle(Paint.Style.FILL);
     }
 
     public void setFaces(Camera.Face[] faces) {
@@ -69,9 +66,11 @@ public class FaceOverlayView extends View {
                 rectF.set(face.rect);
                 matrix.mapRect(rectF);
                 canvas.drawRect(rectF, mPaint);
-                canvas.drawText("Score " + face.score, rectF.right, rectF.top, mTextPaint);
             }
             canvas.restore();
+        } else {
+            super.destroyDrawingCache();
+
         }
     }
 
@@ -85,5 +84,12 @@ public class FaceOverlayView extends View {
         // UI coordinates range from (0, 0) to (width, height).
         matrix.postScale(viewWidth / 2000f, viewHeight / 2000f);
         matrix.postTranslate(viewWidth / 2f, viewHeight / 2f);
+    }
+
+    public void setSurfaceWidgh(int sv){
+        this.surfaceWidgh=sv;
+    }
+    public void setSurfaceHeight(int sv){
+        this.surfaceHeight=sv;
     }
 }
