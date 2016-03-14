@@ -1,26 +1,17 @@
 package pi.hse.facedetection;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import android.content.res.Configuration;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -28,13 +19,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
 
 public class PhotoActivity extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
     //gui
@@ -45,6 +45,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
     Camera camera;
     TextView title_field;
     SurfaceHolder holder;
+    static boolean isLogged;
+    static boolean isRegOk;
 
     //for image uploading
     InputStream inputStream;
@@ -80,7 +82,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
         confirmBtn = (Button) findViewById(R.id.confirm_btn);
         takepicBtn = (Button) findViewById(R.id.takepic_btn);
         title_field = (TextView) findViewById(R.id.title_view);
-        takepicBtn.setEnabled(false);
+        //takepicBtn.setEnabled(false);
         holder = sv.getHolder();
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -153,24 +155,41 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
                 return null;
         }
     }
+    protected void onStart() {
+        super.onStart();
+        camera = Camera.open(CAMERA_ID);
+
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        camera = Camera.open(CAMERA_ID);
+        //camera = Camera.open(CAMERA_ID);
+        ResettingCamera();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+//        if (camera != null) {
+//            camera.setPreviewCallback(null);
+//            camera.stopFaceDetection();
+//            camera.stopPreview();
+//            camera.release();
+//            camera = null;
+//        }
+    }
+    protected  void onStop() {
+        super.onStop();
         if (camera != null) {
-            camera.setPreviewCallback(null);
+            //camera.setPreviewCallback(null);
             camera.stopFaceDetection();
             camera.stopPreview();
             camera.release();
             camera = null;
         }
+
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -180,8 +199,8 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
 
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            camera.setFaceDetectionListener(faceDetectionListener);
-            camera.startFaceDetection();
+         //   camera.setFaceDetectionListener(faceDetectionListener);
+         //   camera.startFaceDetection();
             camera.setPreviewDisplay(holder);
         } catch (IOException e) {
             e.printStackTrace();
@@ -203,7 +222,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
             lp.height = (int) (previewSurfaceWidth / aspect);
         }
         sv.setLayoutParams(lp);
-        camera.startPreview();
+       // camera.startPreview();
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -217,7 +236,7 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
                 takepicBtn.setEnabled(true);
                 mFaceView.setFaces(faces);
             } else {
-                takepicBtn.setEnabled(false);
+                //takepicBtn.setEnabled(false);
                 mFaceView.setFaces(null);
             }
         }
@@ -229,18 +248,18 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
         if (paramBoolean) {
             camera.takePicture(null, null, new Camera.PictureCallback() {
                         @Override
-                        public void onPictureTaken(byte[] data, Camera camera) {
+                       public void onPictureTaken(byte[] data, Camera camera) {
                             try {
-                                FileOutputStream fos = new FileOutputStream(photoToCheck);
+                               FileOutputStream fos = new FileOutputStream(photoToCheck);
                                 fos.write(data);
-                                fos.close();
+                               fos.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             confirmBtn.setVisibility(View.VISIBLE);
                             takepicBtn.setText("Retake");
                             takephoto = false;
-                        }
+                       }
                     }
             );
         }
@@ -249,36 +268,74 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
     public void onClickPicture(View view) {
         if (isRegistering == false) {
             if (takephoto == true) {
-                camera.autoFocus(this);
-            } else {
+                //camera.autoFocus(this);
+                camera.takePicture(null, null, new Camera.PictureCallback() {
+                            @Override
+                            public void onPictureTaken(byte[] data, Camera camera) {
+                                    try {
+                                        FileOutputStream fos = new FileOutputStream(photoToCheck);
+                                        fos.write(data);
+                                        fos.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                confirmBtn.setVisibility(View.VISIBLE);
+                                takepicBtn.setText("Retake");
+                                takephoto = false;
+                            }
+                        }
+                );
+
+            }
+            else {
                 ResettingCamera();
             }
         } else {
             if (takephoto == true) {
-                camera.autoFocus(this);
+                //camera.autoFocus(this);
+                camera.takePicture(null, null, new Camera.PictureCallback() {
+                            @Override
+                            public void onPictureTaken(byte[] data, Camera camera) {
+                                    try {
+                                        FileOutputStream fos = new FileOutputStream(arr[countPics]);
+                                        fos.write(data);
+                                        fos.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                confirmBtn.setVisibility(View.VISIBLE);
+                                takepicBtn.setText("Retake");
+                                takephoto = false;
+                            }
+                        }
+                );
             } else {
                 ResettingCamera();
             }
         }
     }
 
-    public void sendToServer(String image) {
-        bitmap = BitmapFactory.decodeFile(image);
-        stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream); //compress to which format you want.
-        byte[] byte_arr = stream.toByteArray();
-        String image_str = Base64.encodeBytes(byte_arr);
-        nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("image", image_str));
+    public void sendToServer(final String image, final String server) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://10.0.2.2/Upload_image_ANDROID/upload_image.php");
-                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    HttpPost httppost = new HttpPost(server);
+                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/android/data/pi.hse.facedetection/files/"+image +".jpg");
+                    MultipartEntity mpEntity = new MultipartEntity();
+                    mpEntity.addPart(image, new FileBody(file, "image/jpeg"));
+                    httppost.setEntity(mpEntity);
                     HttpResponse response = httpclient.execute(httppost);
                     String the_string_response = convertResponseToString(response);
+                    isLogged = false;
+                    System.out.println("response here!!!");
+                    System.out.println(the_string_response);
+                    if (the_string_response.equals("true")){
+                        isLogged = true;
+                    }
+                    System.out.println(the_string_response.equals("true"));
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -295,6 +352,11 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
             }
         });
         t.start();
+        try{
+            t.join();
+        }
+        catch(InterruptedException e){
+        }
     }
 
     public String convertResponseToString(HttpResponse response) throws IllegalStateException, IOException {
@@ -324,11 +386,14 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
     }
 
     public void onConfirmClicked(View view) {
-        sendToServer(Environment.getExternalStorageDirectory().toString()+"/android/data/pi.hse.facedetection/files/phototocheck.jpg");
-        boolean ServerResponse = false;
-        //Getting server response or checking it right here dunno
+
         if (isRegistering == false) {
-            if (ServerResponse == true) {
+            sendToServer("phototocheck", "http://192.168.1.2:1234/check");
+            // boolean ServerResponse = false;
+            boolean serverResponse = isLogged;
+            System.out.println("response is:" + serverResponse);
+            //Getting server response or checking it right here dunno
+            if (serverResponse == true) {
                 Intent intent = new Intent(this, LogOnActivity.class);
                 startActivity(intent);
             } else {
@@ -339,7 +404,14 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
             if (countPics == 3) {
                 //send to server
                 //success!
-                showDialog(IDD_DIALOG_SIGNUP_SUCCESS);
+                sendToRegister(arr,"http://192.168.1.2:1234/register");
+                if (isRegOk) {
+                    showDialog(IDD_DIALOG_SIGNUP_SUCCESS);
+                }
+                else {
+                    //showDialog(IDD_DIALOG_SIGNUP_ERROR)
+                    //would you like to try again?
+                }
 
             } else {
                 ResettingCamera();
@@ -354,8 +426,53 @@ public class PhotoActivity extends Activity implements SurfaceHolder.Callback, C
         takepicBtn.setText("Pic");
         confirmBtn.setVisibility(View.GONE);
         takephoto = true;
-        takepicBtn.setEnabled(false);
+        //takepicBtn.setEnabled(false);
        // camera.startFaceDetection();
+    }
+
+    public void sendToRegister(final File files[], final String server) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost(server);
+                    MultipartEntity mpEntity = new MultipartEntity();
+                    for (int i=0; i<3; i++) {
+                        mpEntity.addPart("regphoto"+i, new FileBody(files[i], "image/jpeg"));
+                    }
+                    httppost.setEntity(mpEntity);
+                    HttpResponse response = httpclient.execute(httppost);
+                    String the_string_response = convertResponseToString(response);
+                    isRegOk =false;
+                    System.out.println("response here!!!");
+                    System.out.println(the_string_response);
+                    if (the_string_response.equals("ok")){
+                        isRegOk =true;
+                    }
+                    //System.out.println(the_string_response.equals("true"));
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                } catch (Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                    System.out.println("Error in http connection " + e.toString());
+                }
+            }
+        });
+        t.start();
+        try{
+            t.join();
+        }
+        catch(InterruptedException e){
+        }
     }
 }
 
