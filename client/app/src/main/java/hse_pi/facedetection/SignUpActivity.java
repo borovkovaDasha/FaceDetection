@@ -5,26 +5,25 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void run() {
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://ec2-52-32-126-214.us-west-2.compute.amazonaws.com:8080/register");
+                    HttpPost httppost = new HttpPost("http://192.168.1.2:8080/register");
                     List <NameValuePair> params = new ArrayList<NameValuePair>(2);
                     params.add(new BasicNameValuePair("username", name));
                     params.add(new BasicNameValuePair("email", email));
