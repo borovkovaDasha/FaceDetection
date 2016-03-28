@@ -1,0 +1,15 @@
+#ifndef NOTEPADCONTROLLER_H
+#define NOTEPADCONTROLLER_H
+#include "httpserver/httprequest.h"
+#include "httpserver/httpresponse.h"
+#include "httpserver/httprequesthandler.h"
+
+class notepadcontroller: public HttpRequestHandler {
+    Q_OBJECT
+    Q_DISABLE_COPY(notepadcontroller)
+public:
+    notepadcontroller();
+    void service(HttpRequest& request, HttpResponse& response);
+};
+
+#endif // NOTEPADCONTROLLER_H

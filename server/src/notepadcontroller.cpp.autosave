@@ -1,0 +1,31 @@
+#include "notepadcontroller.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "src/database.h"
+#include <QDebug>
+
+using namespace std;
+notepadcontroller::notepadcontroller()
+{
+
+}
+
+void notepadcontroller::service(HttpRequest& request, HttpResponse& response)
+{
+    database db("facedetection.sqlite");
+    db.connect();
+    qDebug()<<"num " << db.numofrows();
+    //we recieved post with picture to check. Lets get it from temp file
+    // and copy it to app files folder in order to check it!
+   if (QTemporaryFile* file = request.getUploadedFile("notepad") ) {
+       if (QFile::exists(filepath))
+       {
+           QFile::remove(filepath);
+       }
+       bool rc = image->copy(filepath);
+       qDebug() << "result is:" << rc ;
+       if (rc ){
+   }
+    
+}
