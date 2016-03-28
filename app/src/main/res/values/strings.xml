@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">FaceDetection</string>
-    <string name="introduction_text">   Take your photo to log in!   </string>
-    <string name="title_activity_log_on">LogOnActivity</string>
-    <string name="sign_step2_text">You should take 3 photos of your face</string>
-</resources>

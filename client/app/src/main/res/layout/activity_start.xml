@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="hse_pi.facedetection.StartActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorBlue">
+
+    <TextView
+        android:id="@+id/sa_welcomeTxt"
+        android:text="@string/welcome"
+        android:textSize="@dimen/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/sa_introTxt"
+        android:layout_below="@+id/sa_welcomeTxt"
+        android:text="@string/intro"
+        android:textSize="@dimen/text_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_below="@+id/sa_introTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        style="@style/Widget.AppCompat.Button.Borderless">
+
+        <Button
+            android:id="@+id/sa_loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/login"
+            android:onClick="onLoginPressed"
+            android:background="@color/colorGreen"/>
+
+        <Button
+            android:id="@+id/sa_signUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/signUp"
+            android:onClick="onSignUpPressed"
+            android:background="@color/colorRed"/>
+
+    </LinearLayout>
+</RelativeLayout>

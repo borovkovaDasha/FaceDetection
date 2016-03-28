@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">FaceDetection</string>
+    <string name="welcome">Welcome to FaceDetection</string>
+    <string name="intro">Hit the login button to sign in into system
+        or push signup button to register as a new user!</string>
+    <string name="login">Log In</string>
+    <string name="signUp">Sign Up</string>
+    <string name="step1">Step 1: Enter your name</string>
+    <string name="step2">Step 2: Enter your email address</string>
+    <string name="step3">Step 3: Take 3 photos of your face</string>
+    <string name="next">Next</string>
+    <string name="info">Take your photo to log in!</string>
+    <string name="pic">Picture</string>
+    <string name="confirm">Confirm</string>
+    <string name="retake">Retake</string>
+    <string name="invalidName">That name contains no legal characters.
+        Please check it and try again</string>
+    <string name="invalidEmail">That email address is not valid.
+        Please check it and try again</string>
+    <string name="logon">Successfully log on!</string>
+    <string name="submit">Submit</string>
+    <string name="logoff">Log off</string>
+</resources>

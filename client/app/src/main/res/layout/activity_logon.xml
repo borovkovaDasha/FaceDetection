@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="hse_pi.facedetection.LogOnActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlue"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/lna_title"
+        android:text="@string/logon"
+        android:textSize="@dimen/text_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:layout_below="@+id/lna_title"
+        android:layout_above="@+id/btns"
+        android:id="@+id/notepad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textAutoCorrect|textMultiLine"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <LinearLayout
+        android:id="@+id/btns"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center_horizontal"
+        style="@style/Widget.AppCompat.Button.Borderless">
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:text="@string/submit"
+            android:background="@color/colorGreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle"
+            android:onClick="onSubmitPressed"/>
+
+        <Button
+            android:text="@string/logoff"
+            android:id="@+id/logOffBtn"
+            android:background="@color/colorRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle"
+            android:onClick="onLogoffPressed"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
