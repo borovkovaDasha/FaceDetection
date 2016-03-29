@@ -53,6 +53,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
     private int countPics = 0;
     private boolean isRegOk;
     private boolean isLogged;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -386,6 +387,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
             @Override
             public void run() {
                 try {
+                    isLogged = false;
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost(server);
                     File file = new File(Environment.getExternalStorageDirectory().toString()
@@ -395,7 +397,10 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
                     httppost.setEntity(mpEntity);
                     HttpResponse response = httpclient.execute(httppost);
                     String the_string_response = convertResponseToString(response);
-                    isLogged = the_string_response.equals("true");
+                    if (!the_string_response.equals("false")){
+                        email = the_string_response;
+                        isLogged = true;
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -446,12 +451,13 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
 
     public void onConfirmClicked(View view) {
         if (!isRegistering) {
-            sendToServer("phototocheck", "http://ec2-52-32-126-214.us-west-2.compute.amazonaws.com:8080/check");
+            sendToServer("phototocheck", "http://dashulya.myftp.org:1234/check");
             boolean serverResponse = isLogged;
             System.out.println("response is:" + serverResponse);
             //Getting server response or checking it right here dunno
             if (serverResponse) {
                 Intent intent = new Intent(this, LogOnActivity.class);
+                intent.putExtra("email", email);
                 startActivity(intent);
             } else {
                 showDialog(IDD_DIALOG_FAIL);
@@ -461,7 +467,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback {
             if (countPics == 3) {
                 //send to server
                 //success!
-                sendToRegister(arr, "http://ec2-52-32-126-214.us-west-2.compute.amazonaws.com:8080/register");
+                sendToRegister(arr, "http://dashulya.myftp.org:1234/register");
                 if (isRegOk) {
                     showDialog(IDD_DIALOG_SIGNUP_SUCCESS);
                 }

@@ -18,8 +18,18 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"/>
 
-    <EditText
+    <TextView
+        android:id="@+id/lna_email"
         android:layout_below="@+id/lna_title"
+        android:textSize="@dimen/text_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:layout_below="@+id/lna_email"
         android:layout_above="@+id/btns"
         android:id="@+id/notepad"
         android:layout_width="match_parent"

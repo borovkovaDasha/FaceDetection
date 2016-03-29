@@ -107,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void run() {
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://ec2-52-32-126-214.us-west-2.compute.amazonaws.com:8080/register");
+                    HttpPost httppost = new HttpPost("http://dashulya.myftp.org:1234/register");
                     List <NameValuePair> params = new ArrayList<NameValuePair>(2);
                     params.add(new BasicNameValuePair("username", name));
                     params.add(new BasicNameValuePair("email", email));
