@@ -46,7 +46,7 @@ int database::remove(QString qemail)
 {
     QSqlQuery query;
     query.prepare
-            ("delete from users where email = (:qemail)");
+            ("delete from person where email = (:qemail)");
     query.bindValue(":qemail", qemail);
     bool execute = query.exec();
     if (!execute)
@@ -57,7 +57,7 @@ int database::remove(QString qemail)
     return 0;
 }
 
-QString database::get(QString qemail)
+QString database::getpath(QString qemail)
 {
     QSqlQuery query;
     query.prepare
@@ -72,7 +72,6 @@ QString database::get(QString qemail)
     QSqlRecord record = query.record();
     if (query.next())
     {
-        qDebug() << query.value(record.indexOf("path")).toString();
         return query.value(record.indexOf("path")).toString();
     }
     return "not found";
@@ -93,7 +92,6 @@ QString database::getemail(QString qpath)
     QSqlRecord record = query.record();
     while (query.next())
     {
-        qDebug() << query.value(record.indexOf("path")).toString();
         if(query.value(record.indexOf("path")).toString() == qpath)
             return query.value(record.indexOf("email")).toString();
     }
@@ -151,7 +149,6 @@ bool database::findemail(QString qemail)
     QSqlRecord record = query.record();
     while (query.next())
     {
-        qDebug() << query.value(record.indexOf("email")).toString();
         if(query.value(record.indexOf("email")).toString() == qemail)
             return false;
     }

@@ -18,7 +18,7 @@ public:
     QString getemail(QString qpath);
     int add(QString qname, QString qemail, QString qpath);
     int remove(QString qemail);
-    QString get(QString qemail);
+    QString getpath(QString qemail);
     int numofrows();
     bool findemail(QString qemail);
 };

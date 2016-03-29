@@ -21,6 +21,7 @@ class FaceRecognition
     string face_cascade_classifier = "C://Users//Dasha//Documents//haarcascade_frontalface_alt2.xml";
     double k1 = 0.2;
     double k2 = 1.2;
+    std::string pathtoimg = "C://Users//Dasha//Documents//ProjectFD//s";
 public:
     void turnimg(Mat &src);
     FaceRecognition();

@@ -7,6 +7,7 @@
 #include "fileuploadcontroller.h"
 #include "registercontroller.h"
 #include "database.h"
+#include "notepadcontroller.h"
 
 class RequestMapper : public HttpRequestHandler {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
 private:
     FileUploadController fileUpload;
     RegisterController registerController;
+    notepadController notepadControl;
 
 
 };

@@ -40,7 +40,6 @@ void FaceRecognition::read_csv(const string& filename, vector<Mat>& images, vect
 //when add new image or download image
 bool FaceRecognition::cutFace(Mat &img, string path, string pathout)
 {
-    std::cout << "path "<< path;
     CascadeClassifier face_cascade;
     face_cascade.load(face_cascade_classifier);
     std::vector<Rect> faces;
@@ -102,7 +101,6 @@ void FaceRecognition::resizeimg(Mat &img)
 
 int FaceRecognition::FaceDetection(string path)
 {
-    cout << "@";
     // These vectors hold the images and corresponding labels.
     vector<Mat> images;
     vector<int> labels;
@@ -121,19 +119,15 @@ int FaceRecognition::FaceDetection(string path)
         CV_Error(CV_StsError, error_message);
     }
     Mat testSample = imread(path, 0);
-    int testLabel = 3;
     images.pop_back();
     labels.pop_back();
-    cout <<"1";
     Ptr<FaceRecognizer> model = createLBPHFaceRecognizer(1,8,8,8,123.0);
-    cout <<"q";
     model->train(images, labels);
-    cout << "qwer";
     int predicted_label = -1;
-    double predicted_confidence = 1.0;
+    double predicted_confidence = 0.0;
     model->predict(testSample, predicted_label, predicted_confidence);
     string result_message = format("Predicted class = %d", predicted_label+1);
-    string fileresult("C://Users//Dasha//Documents//ProjectFD//s"+ to_string(predicted_label+1) + "//1.pgm");
+    string fileresult(pathtoimg+ to_string(predicted_label+1) + "//1.pgm");
     cout << result_message << endl;
     if(predicted_label<0)
         return 0;

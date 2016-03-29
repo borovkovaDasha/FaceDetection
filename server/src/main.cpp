@@ -57,16 +57,7 @@ int main(int argc, char *argv[])
     listenerSettings->beginGroup("listener");
     new HttpListener(listenerSettings,new RequestMapper(&app),&app);
 
-    //database sdb("facedetection.sqlite");
-    //sdb.connect();
-    //QString name = "DashaB";
-    //QString email = "dborovkova@gmail.com";
-    //QString path = "C:/BD/s3";
-    //sdb.add(name, email, path);
-    //sdb.createTable();
-    //QString email("email");
-    //sdb.remove(email);
-    //sdb.createTable();
-
+    database sdb("facedetection.sqlite");
+    sdb.connect();
     return app.exec();
 }

@@ -14,6 +14,8 @@ class FileUploadController : public HttpRequestHandler {
     const char* filepathocv = "C://Users//Dasha//Documents//file.png";
     const char* filepathocvpgm = "C://Users//Dasha//Documents//file.pgm";
     const char* ppath = "C:/BD/s";
+    const char* ppathx = "C://BD//s";
+    const char* pathtocsv = "C:/BD/csv.txt";
 public:
 
     /** Constructor */

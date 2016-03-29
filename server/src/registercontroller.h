@@ -15,6 +15,8 @@ private:
     FaceRecognition fr;
     QByteArray username;
     QByteArray email;
+    const char* pathtohuman = "C:/BD/s";
+    const char* ppathtohuman = "C://BD//s";
 };
 
 #endif // REGISTERCONTROLLER_H

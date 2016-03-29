@@ -15,7 +15,6 @@ void FileUploadController::service(HttpRequest& request, HttpResponse& response)
 {
     database db("facedetection.sqlite");
     db.connect();
-    qDebug()<<"num " << db.numofrows();
     //we recieved post with picture to check. Lets get it from temp file
     // and copy it to app files folder in order to check it!
    if (QTemporaryFile* image = request.getUploadedFile("phototocheck") ) {
@@ -24,7 +23,6 @@ void FileUploadController::service(HttpRequest& request, HttpResponse& response)
            QFile::remove(filepath);
        }
        bool rc = image->copy(filepath);
-       qDebug() << "result is:" << rc ;
        if (rc ){
            //some magic face detection here
            Mat img = imread(filepathocv, 0);
@@ -32,7 +30,6 @@ void FileUploadController::service(HttpRequest& request, HttpResponse& response)
            if (!fr.cutFace(img,filepathocv,filepathocvpgm))
            {
                response.write("false", false);
-               qDebug() << "return false";
                return;
            }
            int ff = fr.FaceDetection(filepathocvpgm);
@@ -40,15 +37,14 @@ void FileUploadController::service(HttpRequest& request, HttpResponse& response)
            {
                //response.write("true", true);
                QString path = ppath + QString::number(ff);
-               QString x = "C://BD//s" + QString::number(ff);
+               QString x = ppathx + QString::number(ff)+ "/";
                qDebug() << "path:" << path;
                QString email = db.getemail(path);
                //std::string email = db.getemail(path).toLocal8Bit().constData();
-               qDebug() << "it is email " << email ;
-               //cout << "email:" << email ;
+               qDebug() << "email of user: " << email ;
                ifstream F;
                std::string a;
-               F.open("C:/BD/csv.txt", ios::in);
+               F.open(pathtocsv, ios::in);
                int numofphoto = 0;
                int i = 0;
                int lastnum = 0;
@@ -66,21 +62,20 @@ void FileUploadController::service(HttpRequest& request, HttpResponse& response)
                }
                F.close();
                ofstream file;
-               file.open("C:/BD/csv.txt", ios::app);
+               file.open(pathtocsv, ios::app);
                std::string newpath(x.toStdString() + "//" + std::to_string(numofphoto+1) + ".pgm;" + std::to_string(ff-1));
                file<<"\r\n"<<newpath;
                file.close();
                std::string newimg(x.toStdString() + "//" + std::to_string(numofphoto+1) + ".pgm");
                imwrite(newimg, img);
+               QByteArray tmp = email.toUtf8().left(1000) ;
+               response.write(tmp, true);
            }
            else
            {
                qDebug() << "you are not in the database ";
                response.write("false", false);
            }
-           //response.write("true", true);
-           //qDebug() << "face:" << ff ;
-           //or false, true if face is not detected
        }
    }
    else {
